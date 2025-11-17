@@ -1,0 +1,8 @@
+pyspark==3.4.1
+boto3==1.34.18
+python-dotenv==1.0.0
+pandas==2.1.4
+numpy==1.26.2
+stable-baselines3==2.2.1
+gymnasium==0.29.1
+
