@@ -140,9 +140,8 @@ class AlpacaWebSocketClient:
             if self.on_message_callback:
                 self.on_message_callback(msg)
             
-            # Debug logging for first few messages
-            if self.messages_received < 10:
-                logger.debug(f"Received {msg_type}: {json.dumps(msg)[:200]}")
+            # Log every message to show data is flowing
+            logger.info(f"📨 Received {msg_type} message #{self.messages_received} for {msg.get('S', 'unknown')}")
         
         else:
             # Unknown message type
@@ -268,4 +267,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
