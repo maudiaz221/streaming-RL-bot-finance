@@ -20,11 +20,15 @@ class Config:
         'ALPACA_WEBSOCKET_URL',
         'wss://stream.data.alpaca.markets/v2/iex'
     )
+    print(f"ALPACA_WEBSOCKET_URL: {ALPACA_WEBSOCKET_URL}")
     
     # AWS Configuration
     AWS_REGION = os.getenv('AWS_REGION', 'us-east-1')
+    print(f"AWS_REGION: {AWS_REGION}")
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    print(f"AWS_ACCESS_KEY_ID: {AWS_ACCESS_KEY_ID}")
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    print(f"AWS_SECRET_ACCESS_KEY: {AWS_SECRET_ACCESS_KEY}")
     
     # Kinesis Configuration
     KINESIS_STREAM_NAME = os.getenv('KINESIS_STREAM_NAME', 'stock-market-stream')
@@ -42,7 +46,7 @@ class Config:
     
     # Batch Configuration for Kinesis
     BATCH_SIZE = int(os.getenv('BATCH_SIZE', '100'))
-    BATCH_TIMEOUT_SECONDS = int(os.getenv('BATCH_TIMEOUT_SECONDS', '5'))
+    BATCH_TIMEOUT_SECONDS = int(os.getenv('BATCH_TIMEOUT_SECONDS', '1'))
     
     # Reconnection Configuration
     MAX_RECONNECT_ATTEMPTS = int(os.getenv('MAX_RECONNECT_ATTEMPTS', '5'))
@@ -87,4 +91,5 @@ if __name__ == "__main__":
     except ValueError as e:
         print(f"❌ Configuration validation failed:")
         print(e)
+
 
