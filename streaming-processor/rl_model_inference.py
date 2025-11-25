@@ -291,3 +291,6 @@ def simple_rule_based_strategy(df: DataFrame) -> DataFrame:
     
     return df
 
+
+
+

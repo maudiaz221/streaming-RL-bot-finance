@@ -318,3 +318,6 @@ class StockTradingEnv(gym.Env):
             'total_shares_sold': self.total_shares_sold
         }
 
+
+
+

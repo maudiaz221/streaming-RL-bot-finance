@@ -68,6 +68,8 @@ class KinesisProducer:
         if not self.batch:
             return
         
+        logger.info(f"📤 Flushing {len(self.batch)} records to Kinesis...")
+        
         try:
             # Kinesis PutRecords supports up to 500 records per request
             # Split into chunks if necessary
@@ -98,9 +100,9 @@ class KinesisProducer:
                 self.total_records_sent += successful
                 self.total_batches_sent += 1
                 
-                logger.debug(
-                    f"Sent batch {self.total_batches_sent}: "
-                    f"{successful}/{len(chunk)} records successful"
+                logger.info(
+                    f"✅ Batch sent to Kinesis: {successful}/{len(chunk)} records successful "
+                    f"(Total: {self.total_records_sent} records in {self.total_batches_sent} batches)"
                 )
             
             # Clear batch and reset timer
@@ -151,12 +153,16 @@ class LocalFileProducer:
         
         # Check if we should flush
         current_time = time.time()
-        if (len(self.batch) >= self.batch_size or 
-            current_time - self.last_flush_time >= self.batch_timeout):
+        
+        # Force immediate flush if BATCH_SIZE is 1 (instant mode)
+        if self.batch_size == 1:
+            self.flush()
+        elif (len(self.batch) >= self.batch_size or 
+              current_time - self.last_flush_time >= self.batch_timeout):
             self.flush()
     
     def flush(self):
-        """Write batch to JSON file"""
+        """Write batch to JSON file in JSONL format (one JSON per line)"""
         if not self.batch:
             return
         
@@ -164,8 +170,10 @@ class LocalFileProducer:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             filename = f"{self.output_path}/batch_{timestamp}_{self.file_counter}.json"
             
+            # Write as JSONL (one JSON object per line) for Spark Streaming compatibility
             with open(filename, 'w') as f:
-                json.dump(self.batch, f, indent=2)
+                for record in self.batch:
+                    f.write(json.dumps(record) + '\n')
             
             logger.info(f"Written {len(self.batch)} records to {filename}")
             
@@ -196,4 +204,5 @@ def create_producer():
         return LocalFileProducer()
     else:
         return KinesisProducer()
+
 

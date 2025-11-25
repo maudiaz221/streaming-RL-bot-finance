@@ -169,14 +169,34 @@ export async function GET(req: NextRequest) {
               console.log(`[API Stream] ${direction} Mock candle: FAKEPACA O:$${openPrice.toFixed(2)} H:$${highPrice.toFixed(2)} L:$${lowPrice.toFixed(2)} C:$${closePrice.toFixed(2)}`)
             }
 
-            // Send latest candles
+            // Send current candles snapshot
             const data = {
               type: 'update',
               timestamp: new Date().toISOString(),
-              candles: latestCandles
+              candles: { ...latestCandles } // Send a copy
             }
             
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`))
+            
+            // IMPORTANT: Reset candles after broadcasting for time-windowed candles
+            // This creates discrete candles per time period (e.g., 5-second bars)
+            // For real market data, each broadcast = new candle period
+            if (!useMockData) {
+              // Reset all candles for next window
+              // Keep the close price as the open for the next candle (continuity)
+              Object.keys(latestCandles).forEach(symbol => {
+                const lastClose = latestCandles[symbol].close
+                latestCandles[symbol] = {
+                  open: lastClose,
+                  high: lastClose,
+                  low: lastClose,
+                  close: lastClose,
+                  volume: 0,
+                  timestamp: new Date().toISOString()
+                }
+              })
+              console.log(`[API Stream] 🔄 Reset candles for new ${updateIntervalMs}ms window`)
+            }
           } catch (error) {
             console.error('[API Stream] Error sending data:', error)
           }
