@@ -75,3 +75,6 @@ export default function TradingSignals({ predictions, symbol }: TradingSignalsPr
   )
 }
 
+
+
+

@@ -105,3 +105,6 @@ export default function StockChart({ data, symbol, height = 400 }: StockChartPro
   )
 }
 
+
+
+
