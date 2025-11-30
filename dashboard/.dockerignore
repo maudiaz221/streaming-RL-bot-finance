@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Next.js build output
+.next
+out
+
+# Environment variables
+.env
+.env*.local
+
+# Testing
+coverage
+.nyc_output
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Misc
+.eslintcache
+
