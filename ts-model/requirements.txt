@@ -1,0 +1,10 @@
+scikit-learn
+websocket-client
+pandas
+numpy
+pyspark
+joblib
+requests
+fastapi
+uvicorn
+apscheduler
